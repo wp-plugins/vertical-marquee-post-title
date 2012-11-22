@@ -4,7 +4,7 @@
 Plugin Name: Vertical marquee post title
 Description: This plug-in will create the vertical marquee effect in your website, if you want your post title to move vertically (scroll upward or downwards) in the screen use this plug-in.
 Author: Gopi.R
-Version: 1.0
+Version: 1.1
 Plugin URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Author URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Donate link: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
@@ -360,7 +360,7 @@ function vmpt_option()
     </ul>
     <h2>Check official website</h2>
     <ul>
-    	<li>Check official website for more info <a href="http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/" target="_blank">Click here</a></li>
+    	<li>Check official website for more information <a href="http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/" target="_blank">Click here</a></li>
     </ul>
     <?php
 }

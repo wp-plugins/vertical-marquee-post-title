@@ -5,8 +5,8 @@ Author URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-
 Plugin URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Tags: vertical, marquee, plugin
 Requires at least: 3.0
-Tested up to: 3.4.1
-Stable tag: 1.0
+Tested up to: 3.5
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	
@@ -60,8 +60,16 @@ Q2. Can you explain the short code?
 
 First version
 
+= 1.1 =	
+
+Tested up to 3.5
+
 == Upgrade Notice ==
 
 = 1.0 =				
 
 First version
+
+= 1.1 =	
+
+Tested up to 3.5
