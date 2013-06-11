@@ -4,7 +4,7 @@
 Plugin Name: Vertical marquee post title
 Description: This plug-in will create the vertical marquee effect in your website, if you want your post title to move vertically (scroll upward or downwards) in the screen use this plug-in.
 Author: Gopi.R
-Version: 1.1
+Version: 2.0
 Plugin URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Author URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Donate link: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
@@ -21,7 +21,6 @@ function vmptshow()
 
 function vmpt_shortcode( $atts ) 
 {
-	
 	global $wpdb;
 	$vmpt_marquee = "";
 	//[vmpt setting="1"]
@@ -159,11 +158,17 @@ function vmpt_widget_init()
 
 function vmpt_deactivation() 
 {
-
+	// No action required.
 }
 
 function vmpt_option() 
 {
+?>
+<div class="wrap">
+  <div class="form-wrap">
+    <div id="icon-edit" class="icon32 icon32-posts-post"><br>
+    </div>
+    <?php
 	global $wpdb;
 	echo '<h2>Vertical marquee post title</h2>';
 	
@@ -179,6 +184,10 @@ function vmpt_option()
 	
 	if (@$_POST['vmpt_submit']) 
 	{	
+	
+		//	Just security thingy that wordpress offers us
+		check_admin_referer('vmpt_form_setting');
+		
 		$a1 = stripslashes($_POST['vmpt_scrollamount1']);
 		$b1 = stripslashes($_POST['vmpt_scrolldelay1']);
 		$c1 = stripslashes($_POST['vmpt_direction1']);
@@ -215,7 +224,6 @@ function vmpt_option()
 		$g4 = stripslashes($_POST['vmpt_orderbys4']);
 		$h4 = stripslashes($_POST['vmpt_order4']);	
 		
-		update_option('vmpt_title', @$vmpt_title );
 		update_option('vmpt_setting1', @$a1 . "~~" . @$b1 . "~~" . @$c1 . "~~" . @$d1 . "~~" . @$e1 . "~~" . @$f1 . "~~" . @$g1 . "~~" . @$h1 . "~~" . @$i1 );
 		update_option('vmpt_setting2', @$a2 . "~~" . @$b2 . "~~" . @$c2 . "~~" . @$d2 . "~~" . @$e2 . "~~" . @$f2 . "~~" . @$g2 . "~~" . @$h2 . "~~" . @$i2 );
 		update_option('vmpt_setting3', @$a3 . "~~" . @$b3 . "~~" . @$c3 . "~~" . @$d3 . "~~" . @$e3 . "~~" . @$f3 . "~~" . @$g3 . "~~" . @$h3 . "~~" . @$i3 );
@@ -225,10 +233,9 @@ function vmpt_option()
 	
 	echo '<form name="vmpt_form" method="post" action="">';
 	?>
-	<table width="800" border="0" cellspacing="0" cellpadding="0">
-	  <tr>
-		<td>
-		<?php
+    <table width="800" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><?php
 		echo '<h2>Setting 1</h2>';
 		
 		echo '<p>Scroll amount :<br><input  style="width: 100px;" type="text" value="';
@@ -238,7 +245,7 @@ function vmpt_option()
 		echo $b1 . '" name="vmpt_scrolldelay1" id="vmpt_scrolldelay1" /></p>';
 		
 		echo '<p>Scroll direction :<br><input  style="width: 100px;" type="text" value="';
-		echo $c1 . '" name="vmpt_direction1" id="vmpt_direction1" /> (Up/Down)</p>';
+		echo $c1 . '" name="vmpt_direction1" id="vmpt_direction1" /> (Up / Down)</p>';
 		
 		echo '<p>Scroll style :<br><input  style="width: 250px;" type="text" value="';
 		echo $d1 . '" name="vmpt_style1" id="vmpt_style1" /></p>';
@@ -250,14 +257,13 @@ function vmpt_option()
 		echo $f1 . '" name="vmpt_categories1" id="vmpt_categories1" /> (Example: 1, 3, 4) <br> Category IDs, separated by commas.</p>';
 		
 		echo '<p>Post orderbys :<br><input  style="width: 200px;" type="text" value="';
-		echo $g1 . '" name="vmpt_orderbys1" id="vmpt_orderbys1" /> (Any 1 from below list) <br> ID/author/title/rand/date/category/modified</p>';
+		echo $g1 . '" name="vmpt_orderbys1" id="vmpt_orderbys1" /> (Any 1 from below list) <br> ID / author / title / rand / date / category / modified</p>';
 		
 		echo '<p>Post order : <br><input  style="width: 100px;" type="text" value="';
 		echo $h1 . '" name="vmpt_order1" id="vmpt_order1" /> ASC/DESC </p>';
 		?>
-		</td>
-		<td>
-		<?php
+        </td>
+        <td><?php
 		echo '<h2>Setting 2</h2>';
 		
 		echo '<p>Scroll amount :<br><input  style="width: 100px;" type="text" value="';
@@ -267,7 +273,7 @@ function vmpt_option()
 		echo $b2 . '" name="vmpt_scrolldelay2" id="vmpt_scrolldelay2" /></p>';
 		
 		echo '<p>Scroll direction :<br><input  style="width: 100px;" type="text" value="';
-		echo $c2 . '" name="vmpt_direction2" id="vmpt_direction2" /> (Up/Down)</p>';
+		echo $c2 . '" name="vmpt_direction2" id="vmpt_direction2" /> (Up / Down)</p>';
 		
 		echo '<p>Scroll style :<br><input  style="width: 250px;" type="text" value="';
 		echo $d2 . '" name="vmpt_style2" id="vmpt_style2" /></p>';
@@ -279,16 +285,15 @@ function vmpt_option()
 		echo $f2 . '" name="vmpt_categories2" id="vmpt_categories2" /> (Example: 1, 3, 4) <br> Category IDs, separated by commas.</p>';
 		
 		echo '<p>Post orderbys :<br><input  style="width: 200px;" type="text" value="';
-		echo $g2 . '" name="vmpt_orderbys2" id="vmpt_orderbys2" /> (Any 1 from below list) <br> ID/author/title/rand/date/category/modified</p>';
+		echo $g2 . '" name="vmpt_orderbys2" id="vmpt_orderbys2" /> (Any 1 from below list) <br> ID / author / title / rand / date / category / modified</p>';
 		
 		echo '<p>Post order : <br><input  style="width: 100px;" type="text" value="';
 		echo $h2 . '" name="vmpt_order2" id="vmpt_order2" /> ASC/DESC </p>';
 		?>
-		</td>
-	  </tr>
-	  <tr>
-		<td>
-		<?php
+        </td>
+      </tr>
+      <tr>
+        <td><?php
 		echo '<h2>Setting 3</h2>';
 		
 		echo '<p>Scroll amount :<br><input  style="width: 100px;" type="text" value="';
@@ -298,7 +303,7 @@ function vmpt_option()
 		echo $b3 . '" name="vmpt_scrolldelay3" id="vmpt_scrolldelay3" /></p>';
 		
 		echo '<p>Scroll direction :<br><input  style="width: 100px;" type="text" value="';
-		echo $c3 . '" name="vmpt_direction3" id="vmpt_direction3" /> (Up/Down)</p>';
+		echo $c3 . '" name="vmpt_direction3" id="vmpt_direction3" /> (Up / Down)</p>';
 		
 		echo '<p>Scroll style :<br><input  style="width: 250px;" type="text" value="';
 		echo $d3 . '" name="vmpt_style3" id="vmpt_style3" /></p>';
@@ -310,14 +315,13 @@ function vmpt_option()
 		echo $f3 . '" name="vmpt_categories3" id="vmpt_categories3" /> (Example: 1, 3, 4) <br> Category IDs, separated by commas.</p>';
 		
 		echo '<p>Post orderbys :<br><input  style="width: 200px;" type="text" value="';
-		echo $g3 . '" name="vmpt_orderbys3" id="vmpt_orderbys3" /> (Any 1 from below list) <br> ID/author/title/rand/date/category/modified</p>';
+		echo $g3 . '" name="vmpt_orderbys3" id="vmpt_orderbys3" /> (Any 1 from below list) <br> ID / author / title / rand / date / category / modified</p>';
 		
 		echo '<p>Post order : <br><input  style="width: 100px;" type="text" value="';
 		echo $h3 . '" name="vmpt_order3" id="vmpt_order3" /> ASC/DESC </p>';
 		?>
-		</td>
-		<td>
-		<?php
+        </td>
+        <td><?php
 		echo '<h2>Setting 4</h2>';
 		
 		echo '<p>Scroll amount :<br><input  style="width: 100px;" type="text" value="';
@@ -327,7 +331,7 @@ function vmpt_option()
 		echo $b4 . '" name="vmpt_scrolldelay4" id="vmpt_scrolldelay4" /></p>';
 		
 		echo '<p>Scroll direction :<br><input  style="width: 100px;" type="text" value="';
-		echo $c4 . '" name="vmpt_direction4" id="vmpt_direction4" /> (Up/Down)</p>';
+		echo $c4 . '" name="vmpt_direction4" id="vmpt_direction4" /> (Up / Down)</p>';
 		
 		echo '<p>Scroll style :<br><input  style="width: 250px;" type="text" value="';
 		echo $d4 . '" name="vmpt_style4" id="vmpt_style4" /></p>';
@@ -339,30 +343,28 @@ function vmpt_option()
 		echo $f4 . '" name="vmpt_categories4" id="vmpt_categories4" /> (Example: 1, 3, 4) <br> Category IDs, separated by commas.</p>';
 		
 		echo '<p>Post orderbys :<br><input  style="width: 200px;" type="text" value="';
-		echo $g4 . '" name="vmpt_orderbys4" id="vmpt_orderbys4" /> (Any 1 from below list) <br> ID/author/title/rand/date/category/modified</p>';
+		echo $g4 . '" name="vmpt_orderbys4" id="vmpt_orderbys4" /> (Any 1 from below list) <br> ID / author / title / rand / date / category / modified</p>';
 		
 		echo '<p>Post order : <br><input  style="width: 100px;" type="text" value="';
 		echo $h4 . '" name="vmpt_order4" id="vmpt_order4" /> ASC/DESC </p>';
 		?>
-		</td>
-	  </tr>
-	</table>
-	<?php
-		
-	echo '<input name="vmpt_submit" id="vmpt_submit" lang="publish" class="button-primary" value="Update all 4 settings" type="Submit" />';
-	echo '</form>';
-	?>
-    <h2>Plugin configuration help</h2>
-    <ul>
-    	<li>Drag and drop the widget</a></li>
-        <li>Short code for posts and pages</a></li>
-        <li>Add directly in the theme</li>
-    </ul>
-    <h2>Check official website</h2>
-    <ul>
-    	<li>Check official website for more information <a href="http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/" target="_blank">Click here</a></li>
-    </ul>
-    <?php
+        </td>
+      </tr>
+    </table>
+	<br />
+	<input name="vmpt_submit" id="vmpt_submit" lang="publish" class="button-primary" value="Update all 4 settings" type="Submit" />
+	<?php wp_nonce_field('vmpt_form_setting'); ?>
+	</form>
+    <h3>Plugin configuration option</h3>
+	<ol>
+		<li>Drag and drop the widget.</li>
+		<li>Add the plugin in the posts or pages using short code.</li>
+		<li>Add directly in to the theme using PHP code.</li>
+	</ol>
+    <p class="description">Check official website for more information <a href="http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/" target="_blank">Click here</a></p>
+  </div>
+</div>
+<?php
 }
 
 function vmpt_add_to_menu() 
