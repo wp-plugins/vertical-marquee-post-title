@@ -5,8 +5,8 @@ Author URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-
 Plugin URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Tags: vertical, marquee, plugin
 Requires at least: 3.4
-Tested up to: 3.6
-Stable tag: 2.0
+Tested up to: 3.8
+Stable tag: 2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 	
@@ -50,9 +50,9 @@ Q2. Can you explain the short code?
 
 == Screenshots ==
 
-1. http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
+1. Front Screen. http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 
-1. http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
+2. Admin Screen. http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 
 == Changelog ==
 
@@ -69,6 +69,12 @@ Tested up to 3.5
 Tested up to 3.6
 Added some security feature.
 
+= 2.1 =	
+
+1. Tested up to 3.8
+2. Now this plugin supports localization (or internationalization). i.e. option to translate into other languages. 
+Plugin *.po file (vertical-marquee-post-title.po) available in the languages folder.
+
 == Upgrade Notice ==
 
 = 1.0 =				
@@ -83,3 +89,9 @@ Tested up to 3.5
 
 Tested up to 3.6
 Added some security feature.
+
+= 2.1 =	
+
+1. Tested up to 3.8
+2. Now this plugin supports localization (or internationalization). i.e. option to translate into other languages. 
+Plugin *.po file (vertical-marquee-post-title.po) available in the languages folder.

@@ -1,10 +1,9 @@
 <?php
-
 /*
 Plugin Name: Vertical marquee post title
 Description: This plug-in will create the vertical marquee effect in your website, if you want your post title to move vertically (scroll upward or downwards) in the screen use this plug-in.
 Author: Gopi.R
-Version: 2.0
+Version: 2.1
 Plugin URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Author URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Donate link: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
@@ -23,6 +22,8 @@ function vmpt_shortcode( $atts )
 {
 	global $wpdb;
 	$vmpt_marquee = "";
+	$vmpt = "";
+	
 	//[vmpt setting="1"]
 	if ( ! is_array( $atts ) )	{ return ''; }
 	$setting = $atts['setting'];
@@ -54,26 +55,30 @@ function vmpt_shortcode( $atts )
 	
 	if ( ! empty($sSql) ) 
 	{
-		@$count = 0;
+		$count = 0;
 		foreach ( $sSql as $sSql ) 
 		{
-			@$title = stripslashes($sSql->post_title);
-			@$link = get_permalink($sSql->ID);
+			$title = stripslashes($sSql->post_title);
+			$link = get_permalink($sSql->ID);
 			if($count==0) 
 			{  
-				if($link != "") { @$vmpt = @$vmpt . "<a href='".@$link."'>"; } 
-				$vmpt = $vmpt . @$title;
+				if($link != "") { $vmpt = $vmpt . "<a href='".@$link."'>"; } 
+				$vmpt = $vmpt . $title;
 				if($link != "") { $vmpt = $vmpt . "</a>"; }
 			}
 			else
 			{
 				$vmpt = $vmpt . "   <br /><br />   ";
 				if($link != "") { $vmpt = $vmpt . "<a href='".$link."'>"; } 
-				$vmpt = $vmpt . @$title;
-				if($link != "") { @$vsm = @$vsm . "</a>"; }
+				$vmpt = $vmpt . $title;
+				if($link != "") { $vsm = $vsm . "</a>"; }
 			}
 			$count = $count + 1;
 		}
+	}
+	else
+	{
+		$vmpt = __('No records found.', 'vertical-marquee-post-title');
 	}
 	wp_reset_query();
 	$vmpt_marquee = $vmpt_marquee . "<div style='padding:3px;' class='vmpt_marquee'>";
@@ -115,7 +120,7 @@ function vmpt_control()
 {
 	$vmpt_title = get_option('vmpt_title');
 	$vmpt_setting = get_option('vmpt_setting');
-	if (@$_POST['vmpt_submit']) 
+	if (isset($_POST['vmpt_submit'])) 
 	{
 		$vmpt_title = $_POST['vmpt_title'];
 		$vmpt_setting = $_POST['vmpt_setting'];
@@ -132,9 +137,9 @@ function vmpt_control()
 	if($vmpt_setting == "3") { $setting3 = "selected"; }
 	if($vmpt_setting == "4") { $setting4 = "selected"; }
 	
-	echo '<p>Widget Title:<br><input  style="width: 200px;" type="text" value="';
+	echo '<p>'.__('Widget Title:', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
 	echo $vmpt_title . '" name="vmpt_title" id="vmpt_title" /></p>';
-	echo '<p>Rss Setting:<br><select name="vmpt_setting" id="vmpt_setting">';
+	echo '<p>'.__('Setting', 'vertical-marquee-post-title').'<br><select name="vmpt_setting" id="vmpt_setting">';
 	echo '<option value="1" '.$setting1.'>Setting 1</option>';
 	echo '<option value="2" '.$setting2.'>Setting 2</option>';
 	echo '<option value="3" '.$setting3.'>Setting 3</option>';
@@ -147,12 +152,12 @@ function vmpt_widget_init()
 {
 	if(function_exists('wp_register_sidebar_widget')) 
 	{
-		wp_register_sidebar_widget('post-title-marquee-scroll', 'Vertical marquee post title', 'vmpt_widget');
+		wp_register_sidebar_widget('post-title-marquee-scroll', __('Vertical marquee post title', 'vertical-marquee-post-title'), 'vmpt_widget');
 	}
 	
 	if(function_exists('wp_register_widget_control')) 
 	{
-		wp_register_widget_control('post-title-marquee-scroll', array('Vertical marquee post title', 'widgets'), 'vmpt_control');
+		wp_register_widget_control('post-title-marquee-scroll', array( __('Vertical marquee post title', 'vertical-marquee-post-title'), 'widgets'), 'vmpt_control');
 	} 
 }
 
@@ -168,9 +173,9 @@ function vmpt_option()
   <div class="form-wrap">
     <div id="icon-edit" class="icon32 icon32-posts-post"><br>
     </div>
+	<h2><?php _e('Vertical marquee post title', 'vertical-marquee-post-title'); ?></h2>
     <?php
 	global $wpdb;
-	echo '<h2>Vertical marquee post title</h2>';
 	
 	$vmpt_setting1 = get_option('vmpt_setting1');
 	$vmpt_setting2 = get_option('vmpt_setting2');
@@ -182,7 +187,7 @@ function vmpt_option()
 	list($a3, $b3, $c3, $d3, $e3, $f3, $g3, $h3) = explode("~~", $vmpt_setting3);
 	list($a4, $b4, $c4, $d4, $e4, $f4, $g4, $h4) = explode("~~", $vmpt_setting4);
 	
-	if (@$_POST['vmpt_submit']) 
+	if (isset($_POST['vmpt_submit'])) 
 	{	
 	
 		//	Just security thingy that wordpress offers us
@@ -229,6 +234,11 @@ function vmpt_option()
 		update_option('vmpt_setting3', @$a3 . "~~" . @$b3 . "~~" . @$c3 . "~~" . @$d3 . "~~" . @$e3 . "~~" . @$f3 . "~~" . @$g3 . "~~" . @$h3 . "~~" . @$i3 );
 		update_option('vmpt_setting4', @$a4 . "~~" . @$b4 . "~~" . @$c4 . "~~" . @$d4 . "~~" . @$e4 . "~~" . @$f4 . "~~" . @$g4 . "~~" . @$h4 . "~~" . @$i4 );
 		
+		?>
+		<div class="updated fade">
+			<p><strong><?php _e('Details successfully updated.', 'vertical-marquee-post-title'); ?></strong></p>
+		</div>
+		<?php
 	}
 	
 	echo '<form name="vmpt_form" method="post" action="">';
@@ -236,132 +246,133 @@ function vmpt_option()
     <table width="800" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td><?php
-		echo '<h2>Setting 1</h2>';
+		echo '<h2>'.__('Setting 1', 'vertical-marquee-post-title').'</h2>';
 		
-		echo '<p>Scroll amount :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Scroll amount :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $a1 . '" name="vmpt_scrollamount1" id="vmpt_scrollamount1" /></p>';
 		
-		echo '<p>Scroll delay :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Scroll delay :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $b1 . '" name="vmpt_scrolldelay1" id="vmpt_scrolldelay1" /></p>';
 		
-		echo '<p>Scroll direction :<br><input  style="width: 100px;" type="text" value="';
-		echo $c1 . '" name="vmpt_direction1" id="vmpt_direction1" /> (Up / Down)</p>';
+		echo '<p>'.__('Scroll direction :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
+		echo $c1 . '" name="vmpt_direction1" id="vmpt_direction1" /> '.__('(Up / Down)', 'vertical-marquee-post-title').'</p>';
 		
-		echo '<p>Scroll style :<br><input  style="width: 250px;" type="text" value="';
+		echo '<p>'.__('Scroll style :', 'vertical-marquee-post-title').'<br><input  style="width: 250px;" type="text" value="';
 		echo $d1 . '" name="vmpt_style1" id="vmpt_style1" /></p>';
 	
-		echo '<p>Number of post :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Number of post :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $e1 . '" name="vmpt_noofpost1" id="vmpt_noofpost1" /></p>';
 		
-		echo '<p>Post categories :<br><input  style="width: 200px;" type="text" value="';
-		echo $f1 . '" name="vmpt_categories1" id="vmpt_categories1" /> (Example: 1, 3, 4) <br> Category IDs, separated by commas.</p>';
+		echo '<p>'.__('Post categories :', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
+		echo $f1 . '" name="vmpt_categories1" id="vmpt_categories1" /> (Example: 1, 3, 4) <br> '.__('Category IDs, separated by commas.', 'vertical-marquee-post-title').'</p>';
 		
-		echo '<p>Post orderbys :<br><input  style="width: 200px;" type="text" value="';
-		echo $g1 . '" name="vmpt_orderbys1" id="vmpt_orderbys1" /> (Any 1 from below list) <br> ID / author / title / rand / date / category / modified</p>';
+		echo '<p>'.__('Post orderbys :', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
+		echo $g1 . '" name="vmpt_orderbys1" id="vmpt_orderbys1" />  '.__('(Any 1 from below list)', 'vertical-marquee-post-title').' <br> ID / author / title / rand / date / category / modified</p>';
 		
-		echo '<p>Post order : <br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Post order :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $h1 . '" name="vmpt_order1" id="vmpt_order1" /> ASC/DESC </p>';
 		?>
         </td>
         <td><?php
-		echo '<h2>Setting 2</h2>';
+		echo '<h2>'.__('Setting 2', 'vertical-marquee-post-title').'</h2>';
 		
-		echo '<p>Scroll amount :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Scroll amount :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $a2 . '" name="vmpt_scrollamount2" id="vmpt_scrollamount2" /></p>';
 		
-		echo '<p>Scroll delay :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Scroll delay :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $b2 . '" name="vmpt_scrolldelay2" id="vmpt_scrolldelay2" /></p>';
 		
-		echo '<p>Scroll direction :<br><input  style="width: 100px;" type="text" value="';
-		echo $c2 . '" name="vmpt_direction2" id="vmpt_direction2" /> (Up / Down)</p>';
+		echo '<p>'.__('Scroll direction :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
+		echo $c2 . '" name="vmpt_direction2" id="vmpt_direction2" /> '.__('(Up / Down)', 'vertical-marquee-post-title').'</p>';
 		
-		echo '<p>Scroll style :<br><input  style="width: 250px;" type="text" value="';
+		echo '<p>'.__('Scroll style :', 'vertical-marquee-post-title').'<br><input  style="width: 250px;" type="text" value="';
 		echo $d2 . '" name="vmpt_style2" id="vmpt_style2" /></p>';
 	
-		echo '<p>Number of post :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Number of post :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $e2 . '" name="vmpt_noofpost2" id="vmpt_noofpost2" /></p>';
 		
-		echo '<p>Post categories :<br><input  style="width: 200px;" type="text" value="';
-		echo $f2 . '" name="vmpt_categories2" id="vmpt_categories2" /> (Example: 1, 3, 4) <br> Category IDs, separated by commas.</p>';
+		echo '<p>'.__('Post categories :', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
+		echo $f2 . '" name="vmpt_categories2" id="vmpt_categories2" /> (Example: 1, 3, 4) <br> '.__('Category IDs, separated by commas.', 'vertical-marquee-post-title').'</p>';
 		
-		echo '<p>Post orderbys :<br><input  style="width: 200px;" type="text" value="';
-		echo $g2 . '" name="vmpt_orderbys2" id="vmpt_orderbys2" /> (Any 1 from below list) <br> ID / author / title / rand / date / category / modified</p>';
+		echo '<p>'.__('Post orderbys :', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
+		echo $g2 . '" name="vmpt_orderbys2" id="vmpt_orderbys2" /> '.__('(Any 1 from below list)', 'vertical-marquee-post-title').' <br> ID / author / title / rand / date / category / modified</p>';
 		
-		echo '<p>Post order : <br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Post order :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $h2 . '" name="vmpt_order2" id="vmpt_order2" /> ASC/DESC </p>';
 		?>
         </td>
       </tr>
       <tr>
         <td><?php
-		echo '<h2>Setting 3</h2>';
+		echo '<h2>'.__('Setting 3', 'vertical-marquee-post-title').'</h2>';
 		
-		echo '<p>Scroll amount :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Scroll amount :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $a3 . '" name="vmpt_scrollamount3" id="vmpt_scrollamount3" /></p>';
 		
-		echo '<p>Scroll delay :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Scroll delay :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $b3 . '" name="vmpt_scrolldelay3" id="vmpt_scrolldelay3" /></p>';
 		
-		echo '<p>Scroll direction :<br><input  style="width: 100px;" type="text" value="';
-		echo $c3 . '" name="vmpt_direction3" id="vmpt_direction3" /> (Up / Down)</p>';
+		echo '<p>'.__('Scroll direction :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
+		echo $c3 . '" name="vmpt_direction3" id="vmpt_direction3" /> '.__('(Up / Down)', 'vertical-marquee-post-title').'</p>';
 		
-		echo '<p>Scroll style :<br><input  style="width: 250px;" type="text" value="';
+		echo '<p>'.__('Scroll style :', 'vertical-marquee-post-title').'<br><input  style="width: 250px;" type="text" value="';
 		echo $d3 . '" name="vmpt_style3" id="vmpt_style3" /></p>';
 		
-		echo '<p>Number of post :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Number of post :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $e3 . '" name="vmpt_noofpost3" id="vmpt_noofpost3" /></p>';
 		
-		echo '<p>Post categories :<br><input  style="width: 200px;" type="text" value="';
-		echo $f3 . '" name="vmpt_categories3" id="vmpt_categories3" /> (Example: 1, 3, 4) <br> Category IDs, separated by commas.</p>';
+		echo '<p>'.__('Post categories :', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
+		echo $f3 . '" name="vmpt_categories3" id="vmpt_categories3" /> (Example: 1, 3, 4) <br> '.__('Category IDs, separated by commas.', 'vertical-marquee-post-title').'</p>';
 		
-		echo '<p>Post orderbys :<br><input  style="width: 200px;" type="text" value="';
-		echo $g3 . '" name="vmpt_orderbys3" id="vmpt_orderbys3" /> (Any 1 from below list) <br> ID / author / title / rand / date / category / modified</p>';
+		echo '<p>'.__('Post orderbys :', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
+		echo $g3 . '" name="vmpt_orderbys3" id="vmpt_orderbys3" /> '.__('(Any 1 from below list)', 'vertical-marquee-post-title').' <br> ID / author / title / rand / date / category / modified</p>';
 		
-		echo '<p>Post order : <br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Post order :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $h3 . '" name="vmpt_order3" id="vmpt_order3" /> ASC/DESC </p>';
 		?>
         </td>
         <td><?php
-		echo '<h2>Setting 4</h2>';
+		echo '<h2>'.__('Setting 4', 'vertical-marquee-post-title').'</h2>';
 		
-		echo '<p>Scroll amount :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Scroll amount :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $a4 . '" name="vmpt_scrollamount4" id="vmpt_scrollamount4" /></p>';
 		
-		echo '<p>Scroll delay :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Scroll delay :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $b4 . '" name="vmpt_scrolldelay4" id="vmpt_scrolldelay4" /></p>';
 		
-		echo '<p>Scroll direction :<br><input  style="width: 100px;" type="text" value="';
-		echo $c4 . '" name="vmpt_direction4" id="vmpt_direction4" /> (Up / Down)</p>';
+		echo '<p>'.__('Scroll direction :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
+		echo $c4 . '" name="vmpt_direction4" id="vmpt_direction4" /> '.__('(Up / Down)', 'vertical-marquee-post-title').'</p>';
 		
-		echo '<p>Scroll style :<br><input  style="width: 250px;" type="text" value="';
+		echo '<p>'.__('Scroll style :', 'vertical-marquee-post-title').'<br><input  style="width: 250px;" type="text" value="';
 		echo $d4 . '" name="vmpt_style4" id="vmpt_style4" /></p>';
 		
-		echo '<p>Number of post :<br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Number of post :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $e4 . '" name="vmpt_noofpost4" id="vmpt_noofpost4" /></p>';
 		
-		echo '<p>Post categories :<br><input  style="width: 200px;" type="text" value="';
-		echo $f4 . '" name="vmpt_categories4" id="vmpt_categories4" /> (Example: 1, 3, 4) <br> Category IDs, separated by commas.</p>';
+		echo '<p>'.__('Post categories :', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
+		echo $f4 . '" name="vmpt_categories4" id="vmpt_categories4" /> (Example: 1, 3, 4) <br> '.__('Category IDs, separated by commas.', 'vertical-marquee-post-title').'</p>';
 		
-		echo '<p>Post orderbys :<br><input  style="width: 200px;" type="text" value="';
-		echo $g4 . '" name="vmpt_orderbys4" id="vmpt_orderbys4" /> (Any 1 from below list) <br> ID / author / title / rand / date / category / modified</p>';
+		echo '<p>'.__('Post orderbys :', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
+		echo $g4 . '" name="vmpt_orderbys4" id="vmpt_orderbys4" /> '.__('(Any 1 from below list)', 'vertical-marquee-post-title').' <br> ID / author / title / rand / date / category / modified</p>';
 		
-		echo '<p>Post order : <br><input  style="width: 100px;" type="text" value="';
+		echo '<p>'.__('Post order :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $h4 . '" name="vmpt_order4" id="vmpt_order4" /> ASC/DESC </p>';
 		?>
         </td>
       </tr>
     </table>
 	<br />
-	<input name="vmpt_submit" id="vmpt_submit" lang="publish" class="button-primary" value="Update all 4 settings" type="Submit" />
+	<input name="vmpt_submit" id="vmpt_submit" lang="publish" class="button-primary" value="<?php _e('Update all 4 settings', 'vertical-marquee-post-title'); ?>" type="Submit" />
 	<?php wp_nonce_field('vmpt_form_setting'); ?>
 	</form>
-    <h3>Plugin configuration option</h3>
+    <h3><?php _e('Plugin configuration option', 'vertical-marquee-post-title'); ?></h3>
 	<ol>
-		<li>Drag and drop the widget.</li>
-		<li>Add the plugin in the posts or pages using short code.</li>
-		<li>Add directly in to the theme using PHP code.</li>
+		<li><?php _e('Drag and drop the widget.', 'vertical-marquee-post-title'); ?></li>
+		<li><?php _e('Add the plugin in the posts or pages using short code.', 'vertical-marquee-post-title'); ?></li>
+		<li><?php _e('Add directly in to the theme using PHP code.', 'vertical-marquee-post-title'); ?></li>
 	</ol>
-    <p class="description">Check official website for more information <a href="http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/" target="_blank">Click here</a></p>
+    <p class="description"><?php _e('Check official website for more information ', 'vertical-marquee-post-title'); ?>
+	<a href="http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/" target="_blank"><?php _e('Click here', 'vertical-marquee-post-title'); ?></a></p>
   </div>
 </div>
 <?php
@@ -369,7 +380,8 @@ function vmpt_option()
 
 function vmpt_add_to_menu() 
 {
-	add_options_page('Vertical marquee post title', 'Vertical marquee post title', 'manage_options', __FILE__, 'vmpt_option' );
+	add_options_page( __('Vertical marquee post title', 'vertical-marquee-post-title'), 
+							__('Vertical marquee post title', 'vertical-marquee-post-title'), 'manage_options', __FILE__, 'vmpt_option' );
 }
 
 if (is_admin()) 
@@ -377,6 +389,12 @@ if (is_admin())
 	add_action('admin_menu', 'vmpt_add_to_menu');
 }
 
+function vmpt_textdomain() 
+{
+	  load_plugin_textdomain( 'vertical-marquee-post-title', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
+
+add_action('plugins_loaded', 'vmpt_textdomain');
 add_action("plugins_loaded", "vmpt_widget_init");
 register_activation_hook(__FILE__, 'vmpt_install');
 register_deactivation_hook(__FILE__, 'vmpt_deactivation');
