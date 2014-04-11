@@ -2,8 +2,8 @@
 /*
 Plugin Name: Vertical marquee post title
 Description: This plug-in will create the vertical marquee effect in your website, if you want your post title to move vertically (scroll upward or downwards) in the screen use this plug-in.
-Author: Gopi.R
-Version: 2.1
+Author: Gopi Ramasamy
+Version: 2.2
 Plugin URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Author URI: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
 Donate link: http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/
@@ -23,6 +23,7 @@ function vmpt_shortcode( $atts )
 	global $wpdb;
 	$vmpt_marquee = "";
 	$vmpt = "";
+	$link = "";
 	
 	//[vmpt setting="1"]
 	if ( ! is_array( $atts ) )	{ return ''; }
@@ -62,16 +63,16 @@ function vmpt_shortcode( $atts )
 			$link = get_permalink($sSql->ID);
 			if($count==0) 
 			{  
-				if($link != "") { $vmpt = $vmpt . "<a href='".@$link."'>"; } 
+				if($link != "") { $vmpt = $vmpt . "<a target='' href='".$link."'>"; } 
 				$vmpt = $vmpt . $title;
 				if($link != "") { $vmpt = $vmpt . "</a>"; }
 			}
 			else
 			{
 				$vmpt = $vmpt . "   <br /><br />   ";
-				if($link != "") { $vmpt = $vmpt . "<a href='".$link."'>"; } 
+				if($link != "") { $vmpt = $vmpt . "<a target='' href='".$link."'>"; } 
 				$vmpt = $vmpt . $title;
-				if($link != "") { $vsm = $vsm . "</a>"; }
+				if($link != "") { $vmpt = $vmpt . "</a>"; }
 			}
 			$count = $count + 1;
 		}
@@ -98,69 +99,7 @@ function vmpt_install()
 	add_option('vmpt_setting3', "2~~5~~down~~color:#FF0000;font:Arial;height:120px;~~10~~~~title~~DESC");
 	add_option('vmpt_setting4', "2~~5~~down~~color:#FF0000;font:Arial;height:140px;~~10~~~~rand~~DESC");
 }
-
-function vmpt_widget($args) 
-{
-	extract($args);
-	if(get_option('vmpt_title') <> "")
-	{
-		echo $before_widget;
-		echo $before_title;
-		echo get_option('vmpt_title');
-		echo $after_title;
-	}
-	vmptshow();
-	if(get_option('vmpt_title') <> "")
-	{
-		echo $after_widget;
-	}
-}
 	
-function vmpt_control() 
-{
-	$vmpt_title = get_option('vmpt_title');
-	$vmpt_setting = get_option('vmpt_setting');
-	if (isset($_POST['vmpt_submit'])) 
-	{
-		$vmpt_title = $_POST['vmpt_title'];
-		$vmpt_setting = $_POST['vmpt_setting'];
-		update_option('vmpt_title', $vmpt_title );
-		update_option('vmpt_setting', $vmpt_setting );
-	}
-	
-	$setting1 = "";
-	$setting2 = "";
-	$setting3 = "";
-	$setting4 = "";
-	if($vmpt_setting == "1") { $setting1 = "selected"; }
-	if($vmpt_setting == "2") { $setting2 = "selected"; }
-	if($vmpt_setting == "3") { $setting3 = "selected"; }
-	if($vmpt_setting == "4") { $setting4 = "selected"; }
-	
-	echo '<p>'.__('Widget Title:', 'vertical-marquee-post-title').'<br><input  style="width: 200px;" type="text" value="';
-	echo $vmpt_title . '" name="vmpt_title" id="vmpt_title" /></p>';
-	echo '<p>'.__('Setting', 'vertical-marquee-post-title').'<br><select name="vmpt_setting" id="vmpt_setting">';
-	echo '<option value="1" '.$setting1.'>Setting 1</option>';
-	echo '<option value="2" '.$setting2.'>Setting 2</option>';
-	echo '<option value="3" '.$setting3.'>Setting 3</option>';
-	echo '<option value="4" '.$setting4.'>Setting 4</option>';
-	echo '</select>';
-	echo '<input type="hidden" id="vmpt_submit" name="vmpt_submit" value="1" />';
-}
-
-function vmpt_widget_init()
-{
-	if(function_exists('wp_register_sidebar_widget')) 
-	{
-		wp_register_sidebar_widget('post-title-marquee-scroll', __('Vertical marquee post title', 'vertical-marquee-post-title'), 'vmpt_widget');
-	}
-	
-	if(function_exists('wp_register_widget_control')) 
-	{
-		wp_register_widget_control('post-title-marquee-scroll', array( __('Vertical marquee post title', 'vertical-marquee-post-title'), 'widgets'), 'vmpt_control');
-	} 
-}
-
 function vmpt_deactivation() 
 {
 	// No action required.
@@ -246,7 +185,7 @@ function vmpt_option()
     <table width="800" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td><?php
-		echo '<h2>'.__('Setting 1', 'vertical-marquee-post-title').'</h2>';
+		echo '<h3>'.__('Setting 1', 'vertical-marquee-post-title').'</h3>';
 		
 		echo '<p>'.__('Scroll amount :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $a1 . '" name="vmpt_scrollamount1" id="vmpt_scrollamount1" /></p>';
@@ -274,7 +213,7 @@ function vmpt_option()
 		?>
         </td>
         <td><?php
-		echo '<h2>'.__('Setting 2', 'vertical-marquee-post-title').'</h2>';
+		echo '<h3>'.__('Setting 2', 'vertical-marquee-post-title').'</h3>';
 		
 		echo '<p>'.__('Scroll amount :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $a2 . '" name="vmpt_scrollamount2" id="vmpt_scrollamount2" /></p>';
@@ -304,7 +243,7 @@ function vmpt_option()
       </tr>
       <tr>
         <td><?php
-		echo '<h2>'.__('Setting 3', 'vertical-marquee-post-title').'</h2>';
+		echo '<h3>'.__('Setting 3', 'vertical-marquee-post-title').'</h3>';
 		
 		echo '<p>'.__('Scroll amount :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $a3 . '" name="vmpt_scrollamount3" id="vmpt_scrollamount3" /></p>';
@@ -332,7 +271,7 @@ function vmpt_option()
 		?>
         </td>
         <td><?php
-		echo '<h2>'.__('Setting 4', 'vertical-marquee-post-title').'</h2>';
+		echo '<h3>'.__('Setting 4', 'vertical-marquee-post-title').'</h3>';
 		
 		echo '<p>'.__('Scroll amount :', 'vertical-marquee-post-title').'<br><input  style="width: 100px;" type="text" value="';
 		echo $a4 . '" name="vmpt_scrollamount4" id="vmpt_scrollamount4" /></p>';
@@ -389,15 +328,97 @@ if (is_admin())
 	add_action('admin_menu', 'vmpt_add_to_menu');
 }
 
+class vmpt_widget_register extends WP_Widget 
+{
+	function __construct() 
+	{
+		$widget_ops = array('classname' => 'widget_text newsticker-widget', 'description' => __('Jquery news ticker', 'vertical-marquee-post-title'), 'vertical-marquee-post-title');
+		parent::__construct('vertical-marquee-post-title', __('Vertical marquee post title', 'vertical-marquee-post-title'), $widget_ops);
+	}
+	
+	function widget( $args, $instance ) 
+	{
+		extract( $args, EXTR_SKIP );
+
+		$title 				= apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
+		$vmpt_setting		= $instance['vmpt_setting'];
+
+		echo $args['before_widget'];
+		if ( ! empty( $title ) )
+		{
+			echo $args['before_title'] . $title . $args['after_title'];
+		}
+		// Call widget method
+		$arr = array();
+		$arr["setting"] 	= $vmpt_setting;
+		echo vmpt_shortcode($arr);
+		
+		// Call widget method
+		echo $args['after_widget'];
+	}
+	
+	function update( $new_instance, $old_instance ) 
+	{
+		$instance 						= $old_instance;
+		$instance['title'] 				= ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['vmpt_setting'] 		= ( ! empty( $new_instance['vmpt_setting'] ) ) ? strip_tags( $new_instance['vmpt_setting'] ) : '';
+		return $instance;
+	}
+
+	function form( $instance ) 
+	{
+		$defaults = array(
+			'title' 		=> '',
+			'vmpt_setting' 	=> ''
+        );
+		
+		$instance 			= wp_parse_args( (array) $instance, $defaults);
+        $title 				= $instance['title'];
+		$vmpt_setting 		= $instance['vmpt_setting'];
+		
+		?>
+		<p>
+            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Widget title', 'vertical-marquee-post-title'); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
+        </p>
+		<p>
+            <label for="<?php echo $this->get_field_id('vmpt_setting'); ?>"><?php _e('Setting', 'vertical-marquee-post-title'); ?></label>
+			<select class="widefat" id="<?php echo $this->get_field_id('vmpt_setting'); ?>" name="<?php echo $this->get_field_name('vmpt_setting'); ?>">
+				<option value="1" <?php $this->vmpt_render_selected($vmpt_setting=='1'); ?>>Setting 1</option>
+				<option value="2" <?php $this->vmpt_render_selected($vmpt_setting=='2'); ?>>Setting 2</option>
+				<option value="3" <?php $this->vmpt_render_selected($vmpt_setting=='3'); ?>>Setting 3</option>
+				<option value="4" <?php $this->vmpt_render_selected($vmpt_setting=='4'); ?>>Setting 4</option>
+			</select>
+        </p>
+		<p>
+			<?php _e('Check official website for more information', 'vertical-marquee-post-title'); ?>
+			<a target="_blank" href="http://www.gopiplus.com/work/2012/09/02/vertical-marquee-post-title-wordpress-plugin/"><?php _e('click here', 'vertical-marquee-post-title'); ?></a>
+		</p>
+		<?php
+	}
+
+	function vmpt_render_selected($var) 
+	{
+		if ($var==1 || $var==true) 
+		{
+			echo 'selected="selected"';
+		}
+	}
+}
+
+function vmpt_widget_loading()
+{
+	register_widget( 'vmpt_widget_register' );
+}
+
 function vmpt_textdomain() 
 {
 	  load_plugin_textdomain( 'vertical-marquee-post-title', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
 
 add_action('plugins_loaded', 'vmpt_textdomain');
-add_action("plugins_loaded", "vmpt_widget_init");
 register_activation_hook(__FILE__, 'vmpt_install');
 register_deactivation_hook(__FILE__, 'vmpt_deactivation');
-add_action('init', 'vmpt_widget_init');
+add_action( 'widgets_init', 'vmpt_widget_loading');
 add_shortcode( 'vmpt', 'vmpt_shortcode' );
 ?>
